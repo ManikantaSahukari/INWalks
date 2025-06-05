@@ -1,0 +1,6 @@
+@INWalksAPI_HostAddress = http://localhost:5166
+
+GET {{INWalksAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
