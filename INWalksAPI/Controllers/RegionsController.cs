@@ -68,8 +68,7 @@ namespace INWalksAPI.Controllers
             #endregion
             //return DTO
             return Ok(regionDto);
-        }
-        #endregion
+        }   
 
 
         //GET THE REGION BY ID
