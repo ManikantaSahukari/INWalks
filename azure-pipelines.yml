@@ -1,0 +1,49 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest' # Modern .NET is cross-platform; Linux is faster and cheaper
+
+variables:
+  buildConfiguration: 'Release'
+  dotNetVersion: '8.x' # Adjust this to match your project version (e.g., 6.x, 7.x, 8.x)
+
+steps:
+# 1. Install the SDK
+- task: UseDotNet@2
+  displayName: 'Install .NET SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '$(dotNetVersion)'
+
+# 2. Restore NuGet Packages
+- task: DotNetCoreCLI@2
+  displayName: 'Restore'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+
+# 3. Build the API
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+# 4. Publish the API (Creates the deployment files)
+- task: DotNetCoreCLI@2
+  displayName: 'Publish'
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
+
+# 5. Upload the Artifact to Azure Pipelines
+- task: PublishBuildArtifacts@1
+  displayName: 'Upload Artifacts'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'InWalksAPI'
+    publishLocation: 'Container'
