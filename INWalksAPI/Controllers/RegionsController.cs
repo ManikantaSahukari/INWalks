@@ -218,5 +218,6 @@ namespace INWalksAPI.Controllers
             return Ok(mapper.Map<RegionDto>(regionDomainModel));
 
         }
+        #endregion
     }
 }
